@@ -1,0 +1,120 @@
+.pl-reply {
+  display: flex;
+  justify-content: space-between;
+  border: 3px solid black;
+  border-radius: 10px;
+  background-color: white;
+  height: 150px;
+  width: 80%;
+  margin: 0 0 10px 10px;
+}
+.pl-reply textarea {
+  height: 80%;
+  width: 50%;
+  margin: 10px 10px 10px 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+  padding-left: 10px;
+  outline: 0;
+}
+
+button {
+  height: 3em;
+  align-self: flex-end;
+  border: 3px solid black;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: pointer;
+  background: #fff;
+  text-align: center;
+  outline: 0;
+}
+button:hover {
+  border-color: #d9d8d8;
+  color: #d9d8d8;
+  box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.1);
+}
+button:active {
+  border-color: #b6b6b6;
+  color: #b6b6b6;
+  outline: 0;
+}
+
+.pl-message {
+  border: 3px solid black;
+  border-radius: 10px;
+  width: 80%;
+  background-color: white;
+  /* margin-left: 10px; */
+  margin: 10px 0 10px 10px;
+}
+
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* color: #2c3e50; */
+}
+::-webkit-scrollbar {
+  width: 2px;
+}
+::-webkit-scrollbar-thumb {
+  width: 2px;
+  background-color: black;
+}
+
+.pl-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.comment-user-head {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 900px) {
+  .comment .pl-reply {
+    height: 80px;
+    width: 100%;
+    align-items: center;
+    margin: 0;
+  }
+  .comment .pl-reply textarea {
+    margin: 0;
+  }
+  .comment .pl-reply {
+    height: 80px;
+    width: 100%;
+    align-items: center;
+    margin: 0;
+  }
+  #app > div.footer > div > div.main {
+    padding: 0;
+    width: 100%;
+  }
+  .comment .pl-message {
+    margin: 0;
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 10px;
+  }
+}
