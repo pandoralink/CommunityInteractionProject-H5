@@ -88,6 +88,69 @@ button:active {
   margin-right: 10px;
 }
 
+body,
+html {
+  height: 100%;
+  margin: 0;
+}
+:root {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+#app {
+  padding: 10px;
+  font-family: Microsoft YaHei, Avenir, Helvetica, Arial, sans-serif;
+}
+.head-content {
+  /* head-content css 代码未生效，原因未知*/
+  display: flex;
+  justify-content: space-between;
+}
+.head-right {
+  display: flex;
+}
+.head-left {
+  display: flex;
+}
+.pl-btn {
+  border: 0.3em solid #48d597;
+  border-radius: 0.8em;
+  padding: 5px 10px;
+  margin: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: pointer;
+  background: #fff;
+  text-align: center;
+  color: white;
+  outline: 0;
+}
+.pl-btn.follow {
+  background-color: #48d597;
+}
+.pl-div {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+  border-radius: 10px;
+  outline: 0;
+  box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.1);
+}
+img,.pl-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.main {
+  padding: 10px 0px;
+}
+.internal {
+  font-weight: bold;
+  color: black;
+}
+
 @media screen and (max-width: 900px) {
   .comment .pl-reply {
     height: 80px;
@@ -114,7 +177,7 @@ button:active {
     width: 100%;
     border-radius: 0;
     border: 0;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid #cccccc;
     padding-bottom: 10px;
   }
 }
