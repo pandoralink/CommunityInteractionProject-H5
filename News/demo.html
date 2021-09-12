@@ -11,35 +11,21 @@
   <body>
     <div id="app">
       <div class="head">
-        <div
-          clsss="head-content"
-          style="display: flex; justify-content: space-between; align-items: center;"
-        >
-          <div class="head-left">
-            <div class="pl-div">
-              <img class="pl-img" :src="headUrl" alt="博主头像" />
-            </div>
-            <div>{{ author }}</div>
-          </div>
-
-          <div class="head-right">
-            <button class="pl-btn follow" @click="followStatus = !followStatus">
-              {{ followStatus ? "+ 关注" : "✔ 已关注" }}
-            </button>
-          </div>
-        </div>
       </div>
       <div class="main"></div>
       <div class="footer">
         <div class="comment">
-          <!-- <post-comment> 一定要和 <message> 解耦，不能相互嵌套！ -->
           <post-comment
+            ref="comment"
             @add="addMessage"
+            @click="replyArticle"
+            @cancel="cancel"
             :remote-base-url="remoteBaseUrl"
             :new-id="newId"
             :commentator-id="userId"
             :commentator-name="userName"
             :commentator-head-url="userHeadUrl"
+            placeholder="回复文章"
           ></post-comment>
           <div class="main">
             <message
@@ -52,10 +38,7 @@
               :remote-base-url="remoteBaseUrl"
               :name="item.commentator_name"
               :head-url="item.commentator_head_url"
-              :new-id="newId"
-              :commentator-id="userId"
-              :commentator-name="userName"
-              :commentator-head-url="userHeadUrl"
+              @add="reply"
             ></message>
           </div>
         </div>
@@ -63,25 +46,28 @@
     </div>
   </body>
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="./lib/vue@3.2.6.js"></script>
+  <script src="./lib/axios@0.21.1.js"></script>
   <script type="module">
     import config from "./lib/config.js";
     import Message from "./comment/Message.js";
     import PostComment from "./comment/PostComment.js";
+    /**
+     * currentReplyId 是当前回复的 parentId
+     * currentChildArr 是当前回复的 <message> 的 son: Array
+    */
     const article = {
       data() {
         return {
-          headUrl: config.defaultHeadBaseUrl + "default_head.png",
-          followStatus: false,
-          author: "",
-          authorHeadUrl: "",
           userName: "",
           remoteBaseUrl: "",
           list: "",
           newId: "",
           userId: "",
           userHeadUrl: "",
+          currentReplyId: 0,
+          replayUserFlag: false,
+          currentChildArr: [],
         };
       },
       created() {
@@ -90,12 +76,6 @@
       },
       methods: {
         initData() {
-          this.author = localStorage.getItem("author")
-            ? localStorage.getItem("author")
-            : "error";
-          this.authorHeadUrl = localStorage.getItem("authorHeadUrl")
-            ? localStorage.getItem("authorHeadUrl")
-            : "http://116.63.152.202:5002/userHead/default_head.png";
           this.userName = localStorage.getItem("userName")
             ? localStorage.getItem("userName")
             : null;
@@ -128,7 +108,6 @@
                   key[item.comment_id] = index;
                   index++;
                 } else {
-                  console.log(item.parent_id,key[1]);
                   if (key[item.parent_id] == undefined) {
                     for (let i = 0; i < key.length; i++) {
                       if (key[i] != undefined) {
@@ -149,8 +128,30 @@
             });
         },
         addMessage(e) {
-          this.list.push(e);
+          e.parent_id = this.currentReplyId;
+          this.currentChildArr.push(e);
+          this.currentReplyId = 0;
+          this.$refs.comment.content = "";
         },
+        reply(e) {
+          this.$refs.comment.content = "";
+          this.currentChildArr = e.arr;
+          this.replayUserFlag = true;
+          this.currentReplyId = e.id;
+          const commentTextAreaDom = this.$refs.comment.$el.querySelector('textarea');
+          commentTextAreaDom.select();
+          commentTextAreaDom.placeholder = "回复" + e.name;
+        },
+        replyArticle() {
+          if(!this.replayUserFlag) {
+            this.currentReplyId = 0;
+            this.$refs.comment.$el.querySelector('textarea').placeholder = "回复文章";
+          }
+        },
+        cancel() {
+          this.replayUserFlag = false;
+          this.replyArticle();
+        }
       },
     };
 
@@ -159,69 +160,4 @@
     app.component("PostComment", PostComment);
     app.mount("#app");
   </script>
-
-  <style>
-    body,
-    html {
-      height: 100%;
-      margin: 0;
-    }
-    :root {
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    }
-    #app {
-      padding: 10px;
-      font-family: Microsoft YaHei, Avenir, Helvetica, Arial, sans-serif;
-    }
-    .head-content {
-      /* head-content css 代码未生效，原因未知*/
-      display: flex;
-      justify-content: space-between;
-    }
-    .head-right {
-      display: flex;
-    }
-    .head-left {
-      display: flex;
-    }
-    .pl-btn {
-      border: 0.3em solid #48d597;
-      border-radius: 0.8em;
-      padding: 5px 10px;
-      margin: 5px;
-      font-weight: 600;
-      font-size: 14px;
-      background-color: #ffffff;
-      cursor: pointer;
-      background: #fff;
-      text-align: center;
-      color: white;
-      outline: 0;
-    }
-    .pl-btn.follow {
-      background-color: #48d597;
-    }
-    .pl-div {
-      position: relative;
-      width: 40px;
-      height: 40px;
-      margin-right: 15px;
-      border-radius: 10px;
-      outline: 0;
-      box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.1);
-    }
-    .pl-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .main {
-      padding: 10px 0px;
-    }
-    .internal {
-      font-weight: bold;
-      color: black;
-    }
-  </style>
 </html>

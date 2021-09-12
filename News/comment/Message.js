@@ -1,4 +1,3 @@
-import PostComment from "./PostComment.js";
 export default {
   template: `
   <div class="pl-message">
@@ -8,20 +7,9 @@ export default {
         <span>{{ name }}</span>
         <span style="margin-left: 10px">{{ createTime ? createTime : '时间'}}</span>
       </div>
-      <button @click="flag = !flag">回复</button>
+      <button @click="reply">回复</button>
     </div>
     <span style="margin-left: 10px">{{ content ? content : "评论内容"}}</span>
-    <post-comment
-      v-show="flag"
-      :parent="id"
-      :remoteBaseUrl="remoteBaseUrl"
-      :new-id="newId"
-      :commentator-id="commentatorId"
-      :commentator-name="commentatorName"
-      :commentator-head-url="commentatorHeadUrl"
-      @add="addMessage"
-      @success="flag = !flag"
-    ></post-comment>
     <div v-if="son.length != 0">
       <message v-for="(item,index) in son" :key="index"
         :id="item.id"
@@ -31,10 +19,7 @@ export default {
         :remote-base-url="remoteBaseUrl"
         :name="item.commentator_name"
         :head-url="item.commentator_head_url"
-        :new-id="newId"
-        :commentator-id="userId"
-        :commentator-name="userName"
-        :commentator-head-url="userHeadUrl"
+        @add="childReply"
       ></message>
     </div>
   </div>
@@ -59,10 +44,6 @@ export default {
         return [];
       },
     },
-    remoteBaseUrl: {
-      type: String,
-      default: "",
-    },
     name: {
       type: String,
       default: "",
@@ -70,36 +51,14 @@ export default {
     headUrl: {
       type: String,
       default: "",
-    },
-    newId: {
-      type: Number,
-      default: 0,
-    },
-    commentatorId: {
-      type: Number,
-      default: 0,
-    },
-    commentatorName: {
-      type: String,
-      default: 0,
-    },
-    commentatorHeadUrl: {
-      type: String,
-      default: 0,
-    },
-  },
-  components: {
-    PostComment,
-  },
-  data() {
-    return {
-      flag: false,
-    };
+    }
   },
   methods: {
-    addMessage(e) {
-      // console.log(e);
-      this.son.push(e);
+    reply() {
+      this.$emit("add", { id: this.id, name: this.name, arr: this.son });
+    },
+    childReply(e) {
+      this.$emit("add", e);
     },
   },
 };

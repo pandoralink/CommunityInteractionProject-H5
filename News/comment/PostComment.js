@@ -1,7 +1,7 @@
 export default {
   template: `
   <div class="pl-reply">
-    <textarea v-model="content"></textarea>
+    <textarea v-model="content" :placeholder="placeholder" @blur="cancel"></textarea>
     <button @click="postMessage">提交评论</button>
   </div>
   `,
@@ -29,6 +29,9 @@ export default {
     commentatorHeadUrl: {
       type: String,
       default: 0
+    },
+    placeholder: {
+      type: String
     }
   },
   data() {
@@ -61,6 +64,9 @@ export default {
           console.log(err);
         })
       }
+    },
+    cancel() {
+      this.$emit("cancel");
     }
   }
 }
