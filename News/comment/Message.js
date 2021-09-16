@@ -16,7 +16,7 @@ export default {
         :content="item.content"
         :createTime="item.create_time"
         :son="item.son"
-        :remote-base-url="remoteBaseUrl"
+        :uid="item.commentator_id"
         :name="item.commentator_name"
         :head-url="item.commentator_head_url"
         @add="childReply"
@@ -27,6 +27,10 @@ export default {
   name: "Message",
   props: {
     id: {
+      type: Number,
+      default: 0,
+    },
+    uid: {
       type: Number,
       default: 0,
     },
@@ -51,11 +55,16 @@ export default {
     headUrl: {
       type: String,
       default: "",
-    }
+    },
   },
   methods: {
     reply() {
-      this.$emit("add", { id: this.id, name: this.name, arr: this.son });
+      this.$emit("add", {
+        id: this.id,
+        name: this.name,
+        arr: this.son,
+        uid: this.uid,
+      });
     },
     childReply(e) {
       this.$emit("add", e);
