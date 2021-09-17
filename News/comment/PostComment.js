@@ -1,7 +1,15 @@
 export default {
   template: `
   <div class="pl-reply">
-    <textarea v-model="content" @click="reply" :placeholder="placeholder" @blur="cancel"></textarea>
+    <textarea
+      rows="1"
+      ref="textarea"
+      v-model="content"
+      :placeholder="placeholder"
+      @click="reply"
+      @blur="cancel"
+      @input="adjustHeight"
+    ></textarea>
     <button @click="postMessage">发送</button>
   </div>
   `,
@@ -45,7 +53,11 @@ export default {
   data() {
     return {
       content: "",
+      el: {},
     };
+  },
+  mounted() {
+    this.el = this.$refs.textarea;
   },
   methods: {
     postMessage() {
@@ -91,6 +103,13 @@ export default {
     },
     reply() {
       this.$emit("reply");
+    },
+    adjustHeight() {
+      const el = this.el;
+      var outerHeight = parseInt(window.getComputedStyle(el).height, 10);
+      var diff = outerHeight - el.clientHeight;
+      el.style.height = 0;
+      el.style.height = Math.max(el.scrollHeight + diff) + "px";
     },
   },
 };

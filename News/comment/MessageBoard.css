@@ -14,7 +14,7 @@
   margin: 10px 10px 10px 10px;
   border: 2px solid black;
   border-radius: 10px;
-  padding-left: 10px;
+  padding: 4px 10px;
   outline: 0;
 }
 
@@ -95,6 +95,7 @@ html {
 }
 :root {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  --infoColor: #BFBFC1;
 }
 #app {
   padding: 10px;
@@ -151,8 +152,41 @@ img,
   font-weight: bold;
   color: black;
 }
+.pl-message-content {
+  position: relative;
+  padding-bottom: 10px;
+}
+.pl-message-content::after {
+  content: "";
+  background: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  margin: auto;
+  border-radius: 10%;
+  transform: scale(1);
+  transition: all 0.6s ease-out;
+}
+.pl-message-content:active:after {
+  transform: scale(0);
+  opacity: 1;
+  transition: 0s;
+}
+.show-comment-text-button {
+  margin: 0px 0px 10px 40px;
+  color: var(--infoColor);
+}
 
 @media screen and (max-width: 900px) {
+  .pl-bar {
+    align-items: center;
+    flex-wrap: wrap;
+  }
   .comment .pl-reply {
     min-height: 40px;
     width: 100%;
@@ -165,18 +199,23 @@ img,
     border-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    padding-bottom: 8px;
     justify-content: space-around;
+    /* 如果不设置 z-index 会导致不同层级混乱，文字重叠 */
+    z-index: 2021;
   }
   .comment .pl-reply textarea {
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
     margin: 5px;
-    min-height: 25px;
     border: 0;
     background: #f1f1f1;
     width: 70%;
+    min-height: 25px;
+    line-height: 1.5;
+    box-sizing: border-box;
+    overflow-y: hidden;
     /* 不知道为什么会出现边框黑线的问题 */
-    /* line-height: 28px; */
   }
   /* textarea 取消滚动条 */
   .comment .pl-reply textarea::-webkit-scrollbar {
@@ -191,12 +230,10 @@ img,
   }
   .comment .pl-message {
     margin: 0;
-    margin-top: 10px;
     width: 100%;
     border-radius: 0;
     border: 0;
     border-bottom: 1px solid #cccccc;
-    padding-bottom: 10px;
   }
 
   .pl-reply button {
@@ -207,5 +244,22 @@ img,
     border: 0px;
     color: white;
     background: #48d597;
+  }
+  .comment-user-head {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    margin-right: 10px;
+  }
+  .pl-message.child .comment-user-head {
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+  }
+  .pl-message.child {
+    border-bottom: 0;
+  }
+  .pl-message.child .pl-message-content {
+    margin-left: 40px;
   }
 }

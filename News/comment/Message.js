@@ -1,17 +1,26 @@
 export default {
   template: `
-  <div class="pl-message">
-    <div class="pl-bar">
-      <div style="display: flex; align-items: center;">
-        <img class="comment-user-head" :src="headUrl" alt="用户头像">
-        <span>{{ name }}</span>
-        <span style="margin-left: 10px">{{ createTime ? createTime : '时间'}}</span>
+  <div class="pl-message" :class="{ 'child' : isChild }">
+    <div class="pl-message-content">
+      <div class="pl-bar" @click.stop="reply">
+        <div
+          style="display: flex; align-items: center; width: 100%; margin: 4px 0px"
+        >
+          <img class="comment-user-head" :src="headUrl" alt="用户头像" />
+          <span style="width: 100%; color: #48d597">{{ name + replyName }}</span>
+        </div>
+        <span style="color: #cccccc; margin: 4px 0px 4px 10px;"
+          >{{ timeConvert }}</span
+        >
       </div>
-      <button @click="reply">回复</button>
+      <span style="margin: 4px 0px 4px 10px;"
+        >{{ content ? content : "评论内容"}}</span
+      >
     </div>
-    <span style="margin-left: 10px">{{ content ? content : "评论内容"}}</span>
     <div v-if="son.length != 0">
-      <message v-for="(item,index) in son" :key="index"
+      <message
+        v-for="(item,index) in currentList"
+        :key="index"
         :id="item.id"
         :content="item.content"
         :createTime="item.create_time"
@@ -19,9 +28,13 @@ export default {
         :uid="item.commentator_id"
         :name="item.commentator_name"
         :head-url="item.commentator_head_url"
+        is-child
         @add="childReply"
+        @click.stop="reply"
+        :rname="item.rname"
       ></message>
     </div>
+    <span class="show-comment-text-button" v-show="isShow" @click="showMoreComment">展开更多回复</span>
   </div>
   `,
   name: "Message",
@@ -56,6 +69,24 @@ export default {
       type: String,
       default: "",
     },
+    isChild: {
+      type: Boolean,
+      default: false,
+    },
+    rname: {
+      type: String,
+      default: "",
+    },
+    first: {
+      type: Boolean,
+      default: false,
+    }
+  },
+  data() {
+    return {
+      showItemNum: 0,
+      firstFlag: this.first,
+    }
   },
   methods: {
     reply() {
@@ -69,5 +100,31 @@ export default {
     childReply(e) {
       this.$emit("add", e);
     },
+    showMoreComment() {
+      this.showItemNum += 1;
+    },
+  },
+  computed: {
+    replyName: function() {
+      return this.rname ? " > " + this.rname : "";
+    },
+    currentList: function() {
+      // 为避免渲染过多评论，设置动态展示数组
+      if(this.son.length > 0 && this.showItemNum == 0) this.showItemNum = 1;
+      const showItemNum = this.showItemNum;
+      if(showItemNum >= this.son.length) this.firstFlag = false;
+      return this.son.filter((item,index) => {
+        return index < showItemNum;
+      })
+    },
+    isShow: function() {
+      if(this.firstFlag && this.son.length > 1) {
+        return true;
+      }
+      else return false;
+    },
+    timeConvert: function() {
+      return dayjs(this.createTime).format('MM-DD');
+    }
   },
 };
