@@ -101,12 +101,20 @@ export default {
       this.$emit("add", e);
     },
     showMoreComment() {
-      this.showItemNum += 1;
+      this.showItemNum += 10;
     },
+  },
+  watch: {
+    son: {
+      handler(newValue,oldValue) {
+        this.showItemNum ++;
+      },
+      deep: true,
+    }
   },
   computed: {
     replyName: function() {
-      return this.rname ? " > " + this.rname : "";
+      return this.rname ? " \u261B " + this.rname : "";
     },
     currentList: function() {
       // 为避免渲染过多评论，设置动态展示数组

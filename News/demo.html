@@ -26,6 +26,7 @@
             :commentator-head-url="userHeadUrl"
             :rid="parseInt(currentReplyUid)"
             :rname="currentReplyUserName"
+            :content-url="articleUrl"
             placeholder="回复文章"
           ></post-comment>
           <div class="main">
@@ -64,56 +65,6 @@
         return {
           userName: "",
           remoteBaseUrl: "",
-          LocalData: [
-            {
-              id: 3,
-              comment_id: 1,
-              new_id: 3,
-              content: "test",
-              create_time: "2021-09-04T09:33:12.000Z",
-              commentator_id: 1005,
-              commentator_name: "庞老闆",
-              commentator_head_url:
-                "http://116.63.152.202:5002/userHead/default_head.png",
-              parent_id: 0,
-            },
-            {
-              id: 6,
-              comment_id: 2,
-              new_id: 3,
-              content: "一条新评论",
-              create_time: "2021-09-04T09:33:12.000Z",
-              commentator_id: 1003,
-              commentator_name: "梁祖豪",
-              commentator_head_url:
-                "http://116.63.152.202:5002/userHead/default_head.png",
-              parent_id: 0,
-            },
-            {
-              id: 8,
-              comment_id: 3,
-              new_id: 3,
-              content: "回复 comment_id 为 1 的评论",
-              create_time: "2021-09-04T09:42:49.000Z",
-              commentator_id: 1003,
-              commentator_name: "梁祖豪",
-              commentator_head_url:
-                "http://116.63.152.202:5002/userHead/default_head.png",
-              parent_id: 1,
-            },
-            {
-              id: 9,
-              comment_id: 4,
-              new_id: 3,
-              content: "回复 comment_id 为 1 的评论",
-              create_time: "2021-09-04T09:42:49.000Z",
-              commentator_id: 1003,
-              commentator_name: "梁祖豪",
-              commentator_head_url:
-                "http://116.63.152.202:5002/userHead/default_head.png",
-              parent_id: 1,
-            },
-          ],
           list: [],
           newId: "",
           userId: "",
@@ -123,6 +74,7 @@
           currentReplyUid: "",
           currentChildArr: [],
           currentReplyUserName: "",
+          articleUrl: "",
         };
       },
       created() {
@@ -131,6 +83,7 @@
       },
       methods: {
         initData() {
+          // android 端输入
           this.userName = localStorage.getItem("userName")
             ? localStorage.getItem("userName")
             : null;
@@ -143,72 +96,47 @@
           this.newId = localStorage.getItem("newId")
             ? localStorage.getItem("newId")
             : null;
+          this.articleUrl = localStorage.getItem("articleUrl")
+            ? localStorage.getItem("articleUrl")
+            : null;
           this.remoteBaseUrl = config.baseUrl ? config.baseUrl : "";
         },
         initCommentData() {
-          let content = this.LocalData;
-          content.forEach((item, index) => {
-            content[index].son = [];
-          });
-          let data = [];
-          let key = [];
-          let index = 0;
-          content.forEach((item) => {
-            if (item.parent_id == 0) {
-              data.push(item);
-              console.log(item.comment_id);
-              key[item.comment_id] = index;
-              index++;
-            } else {
-              if (key[item.parent_id] == undefined) {
-                for (let i = 0; i < key.length; i++) {
-                  if (key[i] != undefined) {
-                    data[key[i]].son.forEach((element, index) => {
-                      if (element.comment_id == item.parent_id)
-                        data[key[i]].son.push(item);
-                      data[key[i]].son[index].rname = element.commentator_name;
-                    });
-                  }
+          axios
+            .get(config.baseUrl + "/getCommentData" + "?new_id=" + this.newId)
+            .then((res) => {
+              let content = res.data.data;
+              content.forEach((item, index) => {
+                content[index].son = [];
+              });
+              let data = [];
+              let key = [];
+              let index = 0;
+              content.forEach((item) => {
+                if (item.parent_id == 0) {
+                  data.push(item);
+                  console.log(item.comment_id);
+                  key[item.comment_id] = index;
+                  index++;
+                } else {
+                  if (key[item.parent_id] == undefined) {
+                    for (let i = 0; i < key.length; i++) {
+                      if (key[i] != undefined) {
+                        data[key[i]].son.forEach((element) => {
+                          if (element.comment_id == item.parent_id)
+                            data[key[i]].son.push(item);
+                        });
+                      }
+                    }
+                  } else data[key[item.parent_id]].son.push(item);
                 }
-              } else data[key[item.parent_id]].son.push(item);
-            }
-          });
-          this.list = data;
-          // axios
-          //   .get(config.baseUrl + "/getCommentData" + "?new_id=" + this.newId)
-          //   .then((res) => {
-          //     let content = res.data.data;
-          //     content.forEach((item, index) => {
-          //       content[index].son = [];
-          //     });
-          //     let data = [];
-          //     let key = [];
-          //     let index = 0;
-          //     content.forEach((item) => {
-          //       if (item.parent_id == 0) {
-          //         data.push(item);
-          //         console.log(item.comment_id);
-          //         key[item.comment_id] = index;
-          //         index++;
-          //       } else {
-          //         if (key[item.parent_id] == undefined) {
-          //           for (let i = 0; i < key.length; i++) {
-          //             if (key[i] != undefined) {
-          //               data[key[i]].son.forEach((element) => {
-          //                 if (element.comment_id == item.parent_id)
-          //                   data[key[i]].son.push(item);
-          //               });
-          //             }
-          //           }
-          //         } else data[key[item.parent_id]].son.push(item);
-          //       }
-          //     });
-          //     this.list = data;
-          //     this.flag = true;
-          //   })
-          //   .catch((err) => {
-          //     console.log(err);
-          //   });
+              });
+              this.list = data;
+              this.flag = true;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         },
         addMessage(e) {
           e.parent_id = this.currentReplyId;

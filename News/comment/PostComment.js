@@ -49,6 +49,10 @@ export default {
     placeholder: {
       type: String,
     },
+    contentUrl: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
@@ -83,6 +87,7 @@ export default {
         parent_id: this.parent,
         rid: this.rid,
         rname: this.rname,
+        contentUrl: this.contentUrl,
       };
       if (!this.content) {
         alert("别TM发空的");
