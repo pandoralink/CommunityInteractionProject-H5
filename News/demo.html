@@ -24,7 +24,7 @@
             :commentator-id="parseInt(userId)"
             :commentator-name="userName"
             :commentator-head-url="userHeadUrl"
-            :rid="parseInt(currentReplyUid)"
+            :rid="parseInt(currentReplyId)"
             :rname="currentReplyUserName"
             :content-url="articleUrl"
             placeholder="回复文章"
@@ -33,7 +33,7 @@
             <message
               v-for="(item,index) in list"
               :key="index"
-              :id="item.comment_id"
+              :id="item.id"
               :content="item.content"
               :create-time="item.create_time"
               :son="item.son"
@@ -43,6 +43,10 @@
               @add="reply"
               first
             ></message>
+            <div
+              alt="空块，避免回复框挡住评论"
+              style="width: 100%; height: 60px"
+            ></div>
           </div>
         </div>
       </div>
@@ -71,7 +75,6 @@
           userHeadUrl: "",
           replayUserFlag: false,
           currentReplyId: 0,
-          currentReplyUid: "",
           currentChildArr: [],
           currentReplyUserName: "",
           articleUrl: "",
@@ -105,43 +108,18 @@
           axios
             .get(config.baseUrl + "/getCommentData" + "?new_id=" + this.newId)
             .then((res) => {
-              let content = res.data.data;
-              content.forEach((item, index) => {
-                content[index].son = [];
-              });
-              let data = [];
-              let key = [];
-              let index = 0;
-              content.forEach((item) => {
-                if (item.parent_id == 0) {
-                  data.push(item);
-                  console.log(item.comment_id);
-                  key[item.comment_id] = index;
-                  index++;
-                } else {
-                  if (key[item.parent_id] == undefined) {
-                    for (let i = 0; i < key.length; i++) {
-                      if (key[i] != undefined) {
-                        data[key[i]].son.forEach((element) => {
-                          if (element.comment_id == item.parent_id)
-                            data[key[i]].son.push(item);
-                        });
-                      }
-                    }
-                  } else data[key[item.parent_id]].son.push(item);
-                }
-              });
-              this.list = data;
-              this.flag = true;
+              this.list = res.data.data;
             })
             .catch((err) => {
               console.log(err);
             });
         },
         addMessage(e) {
-          e.parent_id = this.currentReplyId;
-          e.rname = this.currentReplyUserName;
-          this.currentChildArr.push(e);
+          if (e.parent_id == 0) this.list.push(e);
+          else {
+            e.rname = this.currentReplyUserName;
+            this.currentChildArr.push(e);
+          }
           this.currentReplyId = 0;
           this.$refs.comment.content = "";
         },
@@ -149,7 +127,6 @@
           this.$refs.comment.content = "";
           this.replayUserFlag = true;
           this.currentChildArr = e.arr;
-          this.currentReplyUid = e.uid;
           this.currentReplyId = e.id;
           this.currentReplyUserName = e.name;
           const commentTextAreaDom = this.$refs.comment.$el.querySelector(
@@ -160,7 +137,7 @@
         },
         replyArticle() {
           if (!this.replayUserFlag) {
-            this.currentReplyId = 0;
+            this.postCommentEmpty();
             this.$refs.comment.$el.querySelector("textarea").placeholder =
               "回复文章";
           }
@@ -170,6 +147,11 @@
           // 操作 Dom 元素是因为修改直接修改 placeholder 元素更新失败
           this.$refs.comment.$el.querySelector("textarea").placeholder =
             "回复文章";
+        },
+        postCommentEmpty() {
+          this.currentChildArr = [];
+          this.currentReplyUserName = "";
+          this.currentReplyId = 0;
         },
       },
     };

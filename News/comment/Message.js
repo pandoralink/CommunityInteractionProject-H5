@@ -25,6 +25,7 @@ export default {
         :content="item.content"
         :createTime="item.create_time"
         :son="item.son"
+        :pid="item.parent_id"
         :uid="item.commentator_id"
         :name="item.commentator_name"
         :head-url="item.commentator_head_url"
@@ -44,6 +45,10 @@ export default {
       default: 0,
     },
     uid: {
+      type: Number,
+      default: 0,
+    },
+    pid: {
       type: Number,
       default: 0,
     },
@@ -118,7 +123,12 @@ export default {
     },
     currentList: function() {
       // 为避免渲染过多评论，设置动态展示数组
-      if(this.son.length > 0 && this.showItemNum == 0) this.showItemNum = 1;
+      // 只有 1 级评论具有动态展示数组功能，因此对于 2 - n 级评论做特殊处理
+      if(this.isChild) {
+        this.showItemNum = 2021;
+        return this.son;
+      }
+      else if(this.son.length > 0 && this.showItemNum == 0) this.showItemNum = 1;
       const showItemNum = this.showItemNum;
       if(showItemNum >= this.son.length) this.firstFlag = false;
       return this.son.filter((item,index) => {

@@ -14,10 +14,6 @@ export default {
   </div>
   `,
   props: {
-    parent: {
-      type: Number,
-      default: 0,
-    },
     remoteBaseUrl: {
       type: String,
       default: "",
@@ -84,8 +80,7 @@ export default {
         commentator_id: this.commentatorId,
         commentator_name: this.commentatorName,
         commentator_head_url: this.commentatorHeadUrl,
-        parent_id: this.parent,
-        rid: this.rid,
+        parent_id: this.rid,
         rname: this.rname,
         contentUrl: this.contentUrl,
       };
@@ -93,11 +88,14 @@ export default {
         alert("别TM发空的");
         this.$emit("success");
       } else {
-        this.$emit("add", message);
         this.$emit("success");
         console.log(message);
         axios
           .get(this.remoteBaseUrl + "/addComment", { params: message })
+          .then((res) => {
+            message.id = res.data.data;
+            this.$emit("add", message);
+          })
           .catch((err) => {
             console.log(err);
           });
