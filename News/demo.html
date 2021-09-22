@@ -13,6 +13,7 @@
       <div class="head"></div>
       <div class="main"></div>
       <div class="footer">
+        <span class="footer-info">全部评论</span>
         <div class="comment">
           <post-comment
             ref="comment"
@@ -70,8 +71,8 @@
           userName: "",
           remoteBaseUrl: "",
           list: [],
-          newId: "",
-          userId: "",
+          newId: 0,
+          userId: 0,
           userHeadUrl: "",
           replayUserFlag: false,
           currentReplyId: 0,
@@ -86,22 +87,20 @@
       },
       methods: {
         initData() {
-          // android 端输入
-          this.userName = localStorage.getItem("userName")
-            ? localStorage.getItem("userName")
+          this.userName = config.getQueryVariable("userName")
+            ? config.getQueryVariable("userName")
             : null;
-          this.userId = localStorage.getItem("userId")
-            ? localStorage.getItem("userId")
+          this.userId = config.getQueryVariable("userId")
+            ? config.getQueryVariable("userId")
             : null;
-          this.userHeadUrl = localStorage.getItem("userHeadUrl")
-            ? localStorage.getItem("userHeadUrl")
+          this.userHeadUrl = config.getQueryVariable("userHeadUrl")
+            ? config.getQueryVariable("userHeadUrl")
             : "";
-          this.newId = localStorage.getItem("newId")
-            ? localStorage.getItem("newId")
+          this.newId = config.getQueryVariable("newId")
+            ? config.getQueryVariable("newId")
             : null;
-          this.articleUrl = localStorage.getItem("articleUrl")
-            ? localStorage.getItem("articleUrl")
-            : null;
+          this.articleUrl = window.location.href.split("?")[0];
+          console.log(this.articleUrl);
           this.remoteBaseUrl = config.baseUrl ? config.baseUrl : "";
         },
         initCommentData() {

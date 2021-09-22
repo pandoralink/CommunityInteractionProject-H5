@@ -95,7 +95,8 @@ html {
 }
 :root {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  --infoColor: #BFBFC1;
+  --infoColor: #bfbfc1;
+  --selectColor: #48d597;
 }
 #app {
   padding: 10px;
@@ -181,15 +182,26 @@ img,
   margin: 0px 0px 10px 40px;
   color: var(--infoColor);
 }
+.footer-info {
+  padding: 10px;
+  border-bottom: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  color: var(--selectColor);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
 @media screen and (max-width: 900px) {
+  .comment .main {
+    width: 100%;
+  }
   .pl-bar {
     align-items: center;
     flex-wrap: wrap;
   }
   .comment .pl-reply {
-    min-height: 40px;
     width: 100%;
+    min-height: 40px;
     align-items: center;
     margin: 0;
     position: fixed;
