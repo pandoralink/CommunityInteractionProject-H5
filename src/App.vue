@@ -1,17 +1,16 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <new-edit />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NewEdit from './components/NewEdit.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    NewEdit
   }
 }
 </script>
@@ -23,6 +22,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 </style>
