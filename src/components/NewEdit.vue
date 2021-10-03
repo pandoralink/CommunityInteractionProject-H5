@@ -1,5 +1,11 @@
 <template>
   <div class="home">
+    <input
+      class="article-title"
+      type="text"
+      v-model="title"
+      placeholder="标题"
+    />
     <div class="edit-info" v-if="infoFlag">
       <span>移动端不支持添加图片，可前往 PC 端布局 </span>
       <span @click="closeInfo">❌</span>
@@ -17,6 +23,7 @@ export default {
       editor: null,
       editorData: "",
       infoFlag: true,
+      title: "",
     };
   },
   mounted() {
@@ -68,15 +75,36 @@ export default {
   width: 100%;
   margin: auto;
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
 }
 #demo1 {
+  width: 100%;
   padding-top: 10px;
+}
+.edit-info {
+  display: none;
+}
+.article-title {
+  width: 100%;
+  line-height: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--infoColor);
+  padding: 0px 10px;
+  min-height: 38px;
+  font-size: 17px;
+  caret-color: var(--selectColor);
+}
+.article-title:focus {
+  outline: none;
 }
 @media screen and (max-width: 900px) {
   .edit-info {
+    display: block;
     width: 100%;
     line-height: 40px;
     margin: 0;
+    margin-top: 10px;
     position: relative;
     border: 1px solid #f1f1f1;
     border-radius: 10px;
