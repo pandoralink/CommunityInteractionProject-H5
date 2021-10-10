@@ -88,7 +88,7 @@
       methods: {
         initData() {
           this.userName = config.getQueryVariable("userName")
-            ? config.getQueryVariable("userName")
+            ? decodeURI(config.getQueryVariable("userName"))
             : null;
           this.userId = config.getQueryVariable("userId")
             ? config.getQueryVariable("userId")
