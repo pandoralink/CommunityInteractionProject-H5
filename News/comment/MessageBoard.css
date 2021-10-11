@@ -192,6 +192,13 @@ img,
 }
 
 @media screen and (max-width: 900px) {
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .footer-info {
+    width: 100%;
+  }
   .comment .main {
     width: 100%;
   }

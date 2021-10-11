@@ -1,7 +1,7 @@
 const config = {};
 config.defaultHeadBaseUrl = "http://116.63.152.202:5002/userHead/";
 config.baseUrl = "http://116.63.152.202:3002";
-// config.baseUrl = "http://localhost:3000"
+config.localBaseUrl = "http://localhost:3000"
 config.getQueryVariable = function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");

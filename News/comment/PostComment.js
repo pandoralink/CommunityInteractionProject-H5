@@ -30,6 +30,10 @@ export default {
       type: Number,
       default: 0,
     },
+    pid: {
+      type: Number,
+      default: 0,
+    },
     rname: {
       type: String,
       default: "",
@@ -80,9 +84,10 @@ export default {
         commentator_id: this.commentatorId,
         commentator_name: this.commentatorName,
         commentator_head_url: this.commentatorHeadUrl,
-        parent_id: this.rid,
+        parent_id: this.pid,
         rname: this.rname,
         contentUrl: this.contentUrl,
+        rid: this.rid
       };
       if (!this.content) {
         alert("别TM发空的");
