@@ -6,7 +6,7 @@ export default {
         <div
           style="display: flex; align-items: center; width: 100%; margin: 4px 0px"
         >
-          <img class="comment-user-head" :src="headUrl" alt="用户头像" />
+          <img @click.stop="toUserPageByAndroid" class="comment-user-head" :src="headUrl" alt="用户头像" />
           <span style="width: 100%; color: #48d597">{{ name + replyName }}</span>
         </div>
         <span style="color: #cccccc; margin: 4px 0px 4px 10px;"
@@ -85,13 +85,13 @@ export default {
     first: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data() {
     return {
       showItemNum: 0,
       firstFlag: this.first,
-    }
+    };
   },
   methods: {
     reply() {
@@ -108,14 +108,23 @@ export default {
     showMoreComment() {
       this.showItemNum += 10;
     },
+    toUserPageByAndroid() {
+      const ob = {
+        uid: this.uid,
+        uname: this.name,
+        uheadUrl: this.headUrl,
+      };
+      window.JsToUserPage.startFunction(JSON.stringify(ob));
+    },
   },
   watch: {
     son: {
-      handler(newValue,oldValue) {
-        this.showItemNum ++;
+      handler(newValue, oldValue) {
+        this.showItemNum++;
       },
       deep: true,
-    }
+      immediate: true,
+    },
   },
   computed: {
     replyName: function() {
@@ -124,25 +133,24 @@ export default {
     currentList: function() {
       // 为避免渲染过多评论，设置动态展示数组
       // 只有 1 级评论具有动态展示数组功能，因此对于 2 - n 级评论做特殊处理
-      if(this.isChild) {
+      if (this.isChild) {
         this.showItemNum = 2021;
         return this.son;
-      }
-      else if(this.son.length > 0 && this.showItemNum == 0) this.showItemNum = 1;
+      } else if (this.son.length > 0 && this.showItemNum == 0)
+        this.showItemNum = 1;
       const showItemNum = this.showItemNum;
-      if(showItemNum >= this.son.length) this.firstFlag = false;
-      return this.son.filter((item,index) => {
+      if (showItemNum >= this.son.length) this.firstFlag = false;
+      return this.son.filter((item, index) => {
         return index < showItemNum;
-      })
+      });
     },
     isShow: function() {
-      if(this.firstFlag && this.son.length > 1) {
+      if (this.firstFlag && this.son.length > 1) {
         return true;
-      }
-      else return false;
+      } else return false;
     },
     timeConvert: function() {
-      return dayjs(this.createTime).format('MM-DD');
-    }
+      return dayjs(this.createTime).format("MM-DD");
+    },
   },
 };

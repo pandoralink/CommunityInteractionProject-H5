@@ -11,6 +11,7 @@
 3. data -> firstFlag
    1. 由于 first 是基本数据类型之一（Boolean，Number，String），在子组件内修改会破坏单一数据流，可能会导致数据的变化无法追踪，Vue 也会报错，不建议在子组件内部修改 Props
    2. 解决方法是在 Props 上再嵌套一层 firstFlag，记录并转换此值
+4. id 该消息在评论树中的 id
 
 # <PostComment>
 

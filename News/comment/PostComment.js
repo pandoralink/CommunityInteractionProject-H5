@@ -58,13 +58,16 @@ export default {
     return {
       content: "",
       el: {},
+      defaultInputHeight: 0,
     };
   },
   mounted() {
     this.el = this.$refs.textarea;
+    this.defaultInputHeight = parseInt(window.getComputedStyle(this.el).height, 10);
   },
   methods: {
     postMessage() {
+      this.el.style.height = this.defaultInputHeight + "px";
       let now = new Date();
       let message = {
         new_id: this.newId,

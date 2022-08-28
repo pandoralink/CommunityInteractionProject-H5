@@ -13,7 +13,7 @@
       <div class="head"></div>
       <div class="main"></div>
       <div class="footer">
-        <span class="footer-info">全部评论</span>
+        <span class="footer-info" @click="getTime">全部评论</span>
         <div class="comment">
           <post-comment
             ref="comment"
@@ -82,6 +82,7 @@
           currentChildArr: [],
           currentReplyUserName: "",
           articleUrl: "",
+          time: Date.now()
         };
       },
       created() {
@@ -89,6 +90,9 @@
         this.initCommentData();
       },
       methods: {
+        getTime() {
+          alert((Date.now() - this.time) / 1000);
+        },
         initData() {
           this.userName = config.getQueryVariable("userName")
             ? decodeURI(config.getQueryVariable("userName"))
@@ -103,8 +107,7 @@
             ? config.getQueryVariable("newId")
             : null;
           this.articleUrl = window.location.href.split("?")[0];
-          console.log(this.articleUrl);
-          this.remoteBaseUrl = config.localBaseUrl ? config.localBaseUrl : "";
+          this.remoteBaseUrl = config.baseUrl ? config.baseUrl : "";
         },
         initCommentData() {
           axios
@@ -117,8 +120,9 @@
             });
         },
         addMessage(e) {
-          if (e.parent_id == 0) this.list.push(e);
-          else {
+          if (e.parent_id == 0) {
+            this.list.push(e);
+          } else {
             e.rname = this.currentReplyUserName;
             this.currentChildArr.push(e);
           }

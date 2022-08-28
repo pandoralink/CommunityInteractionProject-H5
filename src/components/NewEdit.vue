@@ -18,7 +18,7 @@
 <script>
 // 引入 wangEditor
 import wangEditor from "wangeditor";
-import axios from "../../../journal-study/src/utils/axios.js";
+import axios from "axios";
 import config from "../config/config.js";
 /**
  * coverUrl 默认为空，暂不考虑编辑器
@@ -103,7 +103,6 @@ export default {
         aid: this.aid,
         html: this.editor.txt.html(),
       };
-      // console.log(this.articleName);
       axios
         .get(config.baseUrl + "/updateArticle", { params: content })
         .then((res) => {
